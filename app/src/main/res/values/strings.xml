@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FaceDetector</string>
+    <string name="data_connection">Data Connection:</string>
+    <string name="searching">Searching</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="android_phone">Android Phone</string>
+    <string name="people">Detected People Names:</string>
+    <string name="no_person">No person yet</string>
 </resources>
