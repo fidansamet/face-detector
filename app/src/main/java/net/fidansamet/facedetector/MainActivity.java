@@ -1,17 +1,28 @@
 package net.fidansamet.facedetector;
 
+
+import android.content.Context;
+import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.hardware.Camera;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -20,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView, searching;
     int dot_counter = 0;
     String update_searching;
+    Camera camera;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    boolean camCondition = false;
+    Button cap, clear;
 
 
     @Override
@@ -34,6 +50,34 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewAdapter = new RecyclerViewAdapter(getBaseContext(), personLineList);
         recyclerView.setAdapter(recyclerViewAdapter);
         update_searching =  getString(R.string.searching);
+        getWindow().setFormat(PixelFormat.UNKNOWN);
+        surfaceView = findViewById(R.id.cameraView);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
+        cap = findViewById(R.id.button_image);
+
+
+
+        cap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camera.takePicture(null, null, null);   // jpeg?
+            }
+        });
+
+        clear = findViewById(R.id.clear_button);
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camCondition =true;
+                camera.startPreview();
+                camera.setDisplayOrientation(90);
+            }
+        });
+
+
 
 
         Thread thread = new Thread() {
@@ -60,8 +104,41 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
         thread.start();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+        camera = Camera.open();
+        camera.setDisplayOrientation(90);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+        if (camCondition) {
+            camera.stopPreview();
+            camCondition = false;
+        }
+
+        if (camera != null) {
+            try {
+
+                camera.setPreviewDisplay(surfaceHolder);
+                camera.startPreview();
+                camCondition = true;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+        camera.stopPreview();
     }
 
     public void updateList(){

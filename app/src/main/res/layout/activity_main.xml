@@ -24,17 +24,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="@string/searching"/>
+        android:text="@string/searching"
+        android:paddingBottom="20sp"/>
 
-    <ImageView
-        android:paddingTop="20sp"
-        android:paddingBottom="20sp"
+    <SurfaceView
+        android:layout_width="wrap_content"
+        android:layout_height="360dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:layout_above="@+id/button_image"
+        android:id="@+id/cameraView"
+        android:paddingBottom="20sp"/>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_image"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:text="Take a picture"/>
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:text="Clear" />
+
+    </LinearLayout>
 
     <TextView
+        android:paddingTop="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="25sp"
