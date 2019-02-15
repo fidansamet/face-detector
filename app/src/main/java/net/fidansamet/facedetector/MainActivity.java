@@ -1,8 +1,12 @@
 package net.fidansamet.facedetector;
 
-
-import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.hardware.Camera;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +33,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     int dot_counter = 0;
     String update_searching;
     Camera camera;
-    SurfaceView surfaceView;
-    SurfaceHolder surfaceHolder;
+    SurfaceView surfaceView, transparentView;
+    SurfaceHolder surfaceHolder, holderTransparent;
     boolean camCondition = false;
     Button cap, clear;
+    Canvas canvas;
+    private Paint mPaint = new Paint();
+    private Paint mPaintText;
+    float RectLeft, RectTop, RectRight, RectBottom;
+    public static Bitmap mBitmap;
+    int  deviceHeight,deviceWidth;
 
 
     @Override
@@ -56,28 +63,73 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
         cap = findViewById(R.id.button_image);
+        transparentView = findViewById(R.id.TransparentView);
+        holderTransparent = transparentView.getHolder();
+        holderTransparent.addCallback(this);
+        holderTransparent.setFormat(PixelFormat.TRANSPARENT);
+        transparentView.setZOrderOnTop(true);
+        clear = findViewById(R.id.clear_button);
+        deviceWidth=getScreenWidth();
+        deviceHeight=getScreenHeight();
 
 
+        final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+//                FileOutputStream outputStream = null;
+//
+//                try {
+//                    File directory = getDir("Camera", Context.MODE_PRIVATE);
+//                    // Create imageDir
+//                    File mypath=new File(directory,System.currentTimeMillis() + ".jpg");
+//                    outputStream = new FileOutputStream(mypath);
+//                    System.out.println(mypath);
+//                    outputStream.write(data);
+//                    outputStream.close();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//
+//                }
+            }
+        };
 
         cap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camera.takePicture(null, null, null);   // jpeg?
+                camera.takePicture(null, null, mPictureCallback);   // jpeg?
+                canvas = holderTransparent.lockCanvas();
+                if (canvas != null) {
+                    canvas.drawColor(0, PorterDuff.Mode.MULTIPLY);
+                    RectLeft = 650;
+                    RectTop = 250;
+                    RectRight = RectLeft + deviceWidth - 730;
+                    RectBottom = RectTop + 300;
+                    Draw(RectLeft, RectTop, RectRight, RectBottom, Color.GREEN);
+                    RectLeft = 300;
+                    RectTop = 500;
+                    RectRight = RectLeft + deviceWidth - 900;
+                    RectBottom = RectTop + 100;
+                    Draw(RectLeft, RectTop, RectRight, RectBottom, Color.BLUE);
+                    holderTransparent.unlockCanvasAndPost(canvas);
+                }
             }
         });
 
-        clear = findViewById(R.id.clear_button);
 
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camCondition =true;
+                canvas = holderTransparent.lockCanvas();
+                canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                holderTransparent.unlockCanvasAndPost(canvas);
+                camCondition = true;
                 camera.startPreview();
-                camera.setDisplayOrientation(90);
+
             }
         });
-
-
 
 
         Thread thread = new Thread() {
@@ -107,11 +159,21 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         thread.start();
     }
 
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        camera = Camera.open();
+        camera = Camera.open(); //open a camera
         camera.setDisplayOrientation(90);
+
     }
 
     @Override
@@ -140,6 +202,19 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         camera.stopPreview();
     }
+
+    public void Draw(float RectLeft, float RectTop, float RectRight, float RectBottom, int color) {
+
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(color);
+        paint.setStrokeWidth(3);
+        canvas.drawRect(RectLeft, RectTop, RectRight, RectBottom, paint);
+
+
+    }
+
 
     public void updateList(){
 
