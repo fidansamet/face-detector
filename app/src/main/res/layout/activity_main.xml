@@ -8,72 +8,46 @@
     tools:context=".MainActivity"
     android:paddingLeft="15sp"
     android:paddingRight="15sp"
-    android:background="@color/background">
+    android:paddingTop="15sp"
+    android:paddingBottom="15sp"
+    android:background="@color/background" >
 
-    <FrameLayout
-        android:paddingTop="20sp"
-        android:layout_width="500dp"
+    <org.opencv.android.JavaCameraView
+        android:layout_width="520dp"
         android:layout_height="match_parent"
-        android:paddingBottom="20sp">
-
-        <SurfaceView
-            android:layout_width="wrap_content"
-            android:layout_height="360dp"
-            android:layout_gravity="center"
-            android:id="@+id/cameraView" />
-
-        <SurfaceView
-            android:id="@+id/TransparentView"
-            android:layout_width="match_parent"
-            android:layout_height="360dp" />
-
-    </FrameLayout>
-
+        android:id="@+id/java_camera_view"
+        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="10sp" >
 
-        <Button
-            android:id="@+id/button_image"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
-            android:text="Take a picture"/>
+        <TextView
+            android:paddingTop="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="@string/people" />
 
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
-            android:text="Clear" />
+        <TextView
+            android:id="@+id/no_item_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:text="@string/no_person"
+            android:visibility="visible"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/recycler_view">
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-
-    <TextView
-        android:paddingTop="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:text="@string/people"/>
-
-    <TextView
-        android:id="@+id/no_item_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="20sp"
-        android:text="@string/no_person"
-        android:visibility="visible"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/recycler_view">
-
-    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
