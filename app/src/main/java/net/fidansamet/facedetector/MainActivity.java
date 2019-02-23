@@ -1,14 +1,13 @@
 package net.fidansamet.facedetector;
 
-import android.graphics.Canvas;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -18,6 +17,9 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +32,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private static List<PersonLine> personLineList;
     private static List<PersonLine> personsList = new ArrayList<>();
     TextView textView;
-    Button cap, clear;
-    Canvas canvas;
     float RectLeft, RectTop, RectRight, RectBottom;
-    PhoneView phoneView = new PhoneView();
     JavaCameraView javaCameraView;
     Mat mRgba;
     BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this) {
@@ -57,13 +56,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         javaCameraView = findViewById(R.id.java_camera_view);
         javaCameraView.setCvCameraViewListener(this);
-
         textView = findViewById(R.id.no_item_id);
         recyclerView = findViewById(R.id.recycler_view);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         recyclerViewAdapter = new RecyclerViewAdapter(getBaseContext(), personLineList);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -110,7 +108,23 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+
         mRgba = inputFrame.rgba();
+        byte[] imageInBytes = new byte[(int) (mRgba.total() * mRgba.channels())];
+
+        // send imageInBytes to database
+        // take output coordinates
+
+        int w = mRgba.width();
+        int h = mRgba.height();
+        RectLeft = w * 1 / 3;
+        RectTop = h * 1 / 3;
+        RectRight = w * 2 / 3;
+        RectBottom = h * 2 /  3;
+
+        Imgproc.rectangle(mRgba, new Point(RectLeft, RectTop), new Point(
+                RectRight, RectBottom), new Scalar( 0, 255, 0 ), 5);
+
         return mRgba;
     }
 

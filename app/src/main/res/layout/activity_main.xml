@@ -13,7 +13,8 @@
     android:background="@color/background" >
 
     <org.opencv.android.JavaCameraView
-        android:layout_width="520dp"
+        android:layout_marginLeft="0dp"
+        android:layout_width="500dp"
         android:layout_height="match_parent"
         android:id="@+id/java_camera_view"
         android:visibility="visible" />
