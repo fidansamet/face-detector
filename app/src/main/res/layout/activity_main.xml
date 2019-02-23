@@ -10,11 +10,10 @@
     android:paddingRight="15sp"
     android:paddingTop="15sp"
     android:paddingBottom="15sp"
-    android:background="@color/background" >
+    android:background="@android:color/black" >
 
     <org.opencv.android.JavaCameraView
-        android:layout_marginLeft="0dp"
-        android:layout_width="500dp"
+        android:layout_width="520dp"
         android:layout_height="match_parent"
         android:id="@+id/java_camera_view"
         android:visibility="visible" />
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:text="@string/people" />
 
         <TextView
@@ -40,7 +39,8 @@
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:text="@string/no_person"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            android:textColor="@android:color/white"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
