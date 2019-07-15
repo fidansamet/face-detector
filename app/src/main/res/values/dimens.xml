@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="glass_card_margin">40px</dimen>
+    <dimen name="glass_card_footer_margin">33px</dimen>
+    <dimen name="glass_card_two_column_margin">30px</dimen>
+    <dimen name="glass_card_body_height">240px</dimen>
+    <dimen name="glass_card_left_column_width">240px</dimen>
+
+</resources>
